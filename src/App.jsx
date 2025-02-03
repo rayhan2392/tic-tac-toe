@@ -3,14 +3,10 @@ import Board from "./components/Board";
 
 function App() {
   return (
-    <>
-      <div>
-        <h1 className="text-4xl text-center mt-4 font-bold">
-          This is a tic tack toe game
-        </h1>
-        <Board />
-      </div>
-    </>
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col items-center">
+      <h1 className="text-4xl text-center mt-8 font-bold">Tic Tac Toe Game</h1>
+      <Board />
+    </div>
   );
 }
 
