@@ -1,37 +1,57 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import calculateWinner from "./calculateWinner";
 import Square from "./Square";
+import { useState } from "react";
 
 const Board = () => {
+  const [board, setBoard] = useState(Array(9).fill(null));//['X', null, null, null, null, 'O', null, null, null]
   const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
+
   const handleClick = (i) => {
-    if(squares[i]){
-        return;
+    if (board[i] || calculateWinner(board)) {
+      return;
     }
-    const nextSquares = squares.slice();
+    const nextBoard = board.slice();
     if (xIsNext) {
-      nextSquares[i] = "X";
+      nextBoard[i] = "X";
     } else {
-      nextSquares[i] = "O";
+      nextBoard[i] = "O";
     }
-    setSquares(nextSquares);
+    setBoard(nextBoard);
     setXIsNext(!xIsNext);
   };
 
+  const winner = calculateWinner(board);
+  let status;
+  if (winner) {
+    status = "Winner:" + winner;
+  } else {
+    status = "Next Player : " + (xIsNext ? "X" : "O");
+  }
+  const handleReset = () => {
+    setBoard(Array(9).fill(null));
+    setXIsNext(true);
+  }
+
   return (
     <>
+     <div className="mt-5 text-center text-2xl font-bold ">{status}</div>
       <div className="flex justify-center mt-4 align-center">
+       
         <div className="grid grid-cols-3">
-          <Square value={squares[0]} onSquareClick={() => handleClick(0)} />
-          <Square value={squares[1]} onSquareClick={() => handleClick(1)} />
-          <Square value={squares[2]} onSquareClick={() => handleClick(2)} />
-          <Square value={squares[3]} onSquareClick={() => handleClick(3)} />
-          <Square value={squares[4]} onSquareClick={() => handleClick(4)} />
-          <Square value={squares[5]} onSquareClick={() => handleClick(5)} />
-          <Square value={squares[6]} onSquareClick={() => handleClick(6)} />
-          <Square value={squares[7]} onSquareClick={() => handleClick(7)} />
-          <Square value={squares[8]} onSquareClick={() => handleClick(8)} />
+          {board.map((value, idx) => {
+            return (
+              <Square
+                key={idx}
+                value={value}
+                onSquareClick={() => handleClick(idx)}
+              />
+            );
+          })}
         </div>
+      </div>
+      <div>
+        <button onClick={handleReset} className="btn text-center">Reset</button>
       </div>
     </>
   );
